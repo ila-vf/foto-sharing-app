@@ -11,7 +11,7 @@ const UploadPhoto = () => {
 
   // Menangani perubahan pada input file
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // menyimpan file yang dipilih ke state
+    setFile(e.target.files[0]);
   };
 
   // Fungsi untuk mengunggah file ke server
@@ -22,16 +22,14 @@ const UploadPhoto = () => {
     }
 
     const formData = new FormData();
-    formData.append('image', file); // menambahkan file ke FormData
-
-    // Mengambil token yang disimpan saat login
+    formData.append('image', file);
     const token = localStorage.getItem('token');
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}` // Mengirim token di header
+          'Authorization': `Bearer ${token}`
         }
       });
 
@@ -41,21 +39,24 @@ const UploadPhoto = () => {
       const userId = localStorage.getItem("userId");
       // Redirect ke halaman profile
       navigate(`/profile/${userId}`);
-        } catch (err) {
-          setMessage('Upload failed. Please try again.');
-          console.error('Upload failed:', err);
-        }
-      };
+    } catch (err) {
+      setMessage('Upload failed. Please try again.');
+      console.error('Upload failed:', err);
+    }
+  };
 
   return (
     <div style={styles.container}>
       <Sidebar />
       <div style={styles.profileContent}>
-      <h1>Upload Photo</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
-      {message && <p>{message}</p>}
-    </div>
+        <h1 style={styles.title}>Upload Photo</h1>
+
+        <input type="file" onChange={handleFileChange} style={styles.input} />
+
+        <button onClick={handleUpload} style={styles.button}>Upload</button>
+
+        {message && <p style={styles.message}>{message}</p>}
+      </div>
     </div>
   );
 };
@@ -65,20 +66,28 @@ const styles = {
     display: 'flex',
   },
   profileContent: {
-    marginLeft: '250px',
-    padding: '20px',
+    marginLeft: '200px', // Pastikan ini sesuai lebar sidebar
+    padding: '40px',
+    paddingLeft: '80px',
     flex: 1,
+    backgroundColor: '#f9f9f9',
+    minHeight: '100vh',
   },
-  input: {
+  heading: {
     marginBottom: '20px',
   },
+  input: {
+    marginBottom: '15px',
+    display: 'block',
+  },
   button: {
-    padding: '10px 20px',
+    padding: '8px 16px',
     backgroundColor: '#0095F6',
     color: '#fff',
     border: 'none',
     cursor: 'pointer',
     borderRadius: '5px',
+    marginBottom: '15px', // Jarak dengan message
   },
   message: {
     marginTop: '20px',
@@ -86,5 +95,6 @@ const styles = {
     color: 'green',
   },
 };
+
 
 export default UploadPhoto;

@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation  } from 'react-router-dom';
+import '../App.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -52,19 +53,22 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>{isUpdate ? 'Edit User' : 'Register'}</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <div className="register-container">
+      <form className="register-form" onSubmit={handleSubmit}>
+        <h1>{isUpdate ? 'Edit User' : 'Register'}</h1>
+  
+        <div className="form-group">
           <label>Username:</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
               // disabled={isUpdate} // jangan diubah kalau update
+              placeholder={'Masukkan Username'}
           />
         </div>
-        <div>
+  
+        <div className="form-group">
           <label>Password:</label>
           <input
             type="password"
@@ -74,20 +78,24 @@ const Register = () => {
 
           />
         </div>
-        {currentUser?.role === 'admin' || isUpdate && (
-        <div>
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </div>
+  
+        {(currentUser?.role === 'admin' || isUpdate) && (
+          <div className="form-group">
+            <label>Role:</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
         )}
-        <button type="submit">{isUpdate ? 'Update' : 'Register'}</button>
+  
+        <button type="submit" className="register-button">
+          {isUpdate ? 'Update' : 'Register'}
+        </button>
+        {message && <p className="register-message">{message}</p>}
       </form>
-      {message && <p>{message}</p>}
     </div>
-  );
+  ); 
 };
 
 export default Register;
