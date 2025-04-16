@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import UploadPhoto from './pages/UploadPhoto';
 import AdminDashboard from './pages/AdminDashboard';
 import Profile from './pages/Profile'; 
+import EditProfile from './pages/EditProfile';
 import { Navigate } from 'react-router-dom';
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           {/* Route untuk halaman profile */}
           <Route path="/profile/:userId" element={<Profile />} />
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+          <Route path="/edit-profile/:userId" element={<EditProfile />} />
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </div>
