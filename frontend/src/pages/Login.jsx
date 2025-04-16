@@ -18,48 +18,63 @@ const Login = ({ setAuthToken }) => {
         username,
         password,
       });
-      console.log('Login response:', response.data);
+
       const { token, role, userId } = response.data;
 
-      localStorage.setItem('token', response.data.token); // Simpan token di localStorage
-      setAuthToken(token); // Set token di App.js
-      localStorage.setItem('role', response.data.role);
-      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem('token', token);
+      setAuthToken(token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('userId', userId);
       setMessage('Login successful!');
-      navigate('/upload'); // Redirect ke halaman upload setelah login
+      navigate('/upload');
     } catch (error) {
       setMessage('Login failed: ' + error.message);
     }
   };
-  
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <div className="form-group">
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder={'Masukkan Username'}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={'Masukkan Password'}
-            required
-          />
-        </div>
-        <button type="submit" className="login-button">Login</button>
-        {message && <p className="login-message">{message}</p>}
-      </form>
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-400 to-pink-400">
+      <div className="card w-full max-w-sm shadow-2xl bg-base-100">
+        <form className="card-body" onSubmit={handleLogin}>
+          <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Username</span>
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Masukkan Username"
+              className="input input-bordered"
+              required
+            />
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Password</span>
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Masukkan Password"
+              className="input input-bordered"
+              required
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <button type="submit" className="btn btn-primary w-1/2 md:w-1/3">Login</button>
+          </div>
+
+          {message && (
+            <div className="mt-4 text-center text-sm text-red-500">{message}</div>
+          )}
+        </form>
+      </div>
     </div>
   );
 };

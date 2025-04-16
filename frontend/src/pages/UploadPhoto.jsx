@@ -7,11 +7,11 @@ const UploadPhoto = () => {
   // State untuk menyimpan file yang dipilih dan pesan notifikasi
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // Menangani perubahan pada input file
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFile(e.target.files[0]); // menyimpan file yang dipilih ke state
   };
 
   // Fungsi untuk mengunggah file ke server
@@ -22,14 +22,16 @@ const UploadPhoto = () => {
     }
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', file); // menambahkan file ke FormData
+
+    // Mengambil token yang disimpan saat login
     const token = localStorage.getItem('token');
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}` // Mengirim token di header
         }
       });
 
@@ -46,16 +48,32 @@ const UploadPhoto = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="flex">
       <Sidebar />
-      <div style={styles.profileContent}>
-        <h1 style={styles.title}>Upload Photo</h1>
-
-        <input type="file" onChange={handleFileChange} style={styles.input} />
-
-        <button onClick={handleUpload} style={styles.button}>Upload</button>
-
-        {message && <p style={styles.message}>{message}</p>}
+      <div className="ml-[250px] p-6 flex-1">
+        <h1 className="text-3xl font-bold text-center mb-4">Upload Photo</h1>
+        <div className="flex flex-col items-center space-y-4">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+          />
+          <button
+            onClick={handleUpload}
+            className="btn btn-primary w-full max-w-xs"
+          >
+            Upload
+          </button>
+          {message && (
+            <p
+              className={`mt-4 text-lg ${
+                message.includes('failed') ? 'text-red-600' : 'text-green-600'
+              }`}
+            >
+              {message}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
