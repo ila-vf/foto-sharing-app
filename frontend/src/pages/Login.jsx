@@ -6,6 +6,7 @@ const Login = ({ setAuthToken }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -16,9 +17,13 @@ const Login = ({ setAuthToken }) => {
         username,
         password,
       });
-      const token = response.data.token;
-      localStorage.setItem('token', token); // Simpan token di localStorage
+      console.log('Login response:', response.data);
+      const { token, role, userId } = response.data;
+
+      localStorage.setItem('token', response.data.token); // Simpan token di localStorage
       setAuthToken(token); // Set token di App.js
+      localStorage.setItem('role', response.data.role);
+      localStorage.setItem("userId", response.data.userId);
       setMessage('Login successful!');
       navigate('/upload'); // Redirect ke halaman upload setelah login
     } catch (error) {

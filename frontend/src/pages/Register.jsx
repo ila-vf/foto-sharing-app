@@ -1,23 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const userData = location.state?.user; // data user dari dashboard
+  const isUpdate = !!userData;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate();
+  const [role, setRole] = useState('user'); // default role
+  const currentUser = JSON.parse(localStorage.getItem('user')); // atau pakai context kalau ada
 
-  const handleRegister = async (e) => {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (isUpdate) {
+      console.log(userData);
+      setUsername(userData.username);
+      setRole(userData.role);
+      // password kosong karena tidak ditampilkan
+    }
+  }, [isUpdate, userData]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      if (isUpdate) {
+       // Update user, hanya kirim username dan role, password hanya dikirim jika diisi
+       const payload = { username, role };
+
+       // Jika password diisi, tambahkan password ke payload
+       if (password) {
+         payload.password = password;
+       }
+
+       await axios.put(`http://localhost:5000/users/${userData.id}`, payload);
+       setMessage('User berhasil diperbarui.');
+      } else {
       const response = await axios.post('http://localhost:5000/register', {
         username,
         password,
+        role,
       });
       setMessage(response.data.message);
-      navigate('/login'); // Redirect ke halaman login setelah berhasil register
+    }
+      navigate('/admin-dashboard'); // Redirect ke halaman login setelah berhasil register
     } catch (error) {
       setMessage('Registration failed: ' + error.message);
     }
@@ -25,15 +53,15 @@ const Register = () => {
 
   return (
     <div>
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
+      <h1>{isUpdate ? 'Edit User' : 'Register'}</h1>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+              // disabled={isUpdate} // jangan diubah kalau update
           />
         </div>
         <div>
@@ -42,10 +70,20 @@ const Register = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            placeholder={isUpdate ? 'Masukkan password lama jika tidak ingin diganti' : 'Masukkan password'}
+
           />
         </div>
-        <button type="submit">Register</button>
+        {currentUser?.role === 'admin' || isUpdate && (
+        <div>
+          <label>Role:</label>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+        )}
+        <button type="submit">{isUpdate ? 'Update' : 'Register'}</button>
       </form>
       {message && <p>{message}</p>}
     </div>
