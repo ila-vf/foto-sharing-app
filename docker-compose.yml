@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Database service (MySQL)
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: tbc123
+      MYSQL_DATABASE: foto_sharing_app
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - foto-network
+
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - foto-network
+    volumes:
+      - ./backend/uploads:/usr/src/app/uploads
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - foto-network
+    depends_on:
+      - backend
+
+networks:
+  foto-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  uploads:

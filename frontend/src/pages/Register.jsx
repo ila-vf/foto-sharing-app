@@ -43,7 +43,7 @@ const Register = () => {
         setMessage(response.data.message);
       }
 
-      navigate('/admin-dashboard');
+      navigate('/login');
     } catch (error) {
       setMessage('Proses gagal: ' + error.message);
     }

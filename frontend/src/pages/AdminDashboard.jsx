@@ -52,7 +52,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen min-h-screen lg:flex">
+    <div className="min-h-screen lg:flex">
   <Sidebar />
 
   {/* Konten utama dashboard */}

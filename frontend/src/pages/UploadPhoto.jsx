@@ -50,7 +50,7 @@ const UploadPhoto = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="ml-[250px] p-6 flex-1">
+      <div className="p-6 flex-1">
         <h1 className="text-3xl font-bold text-center mb-4">Upload Photo</h1>
         <div className="flex flex-col items-center space-y-4">
           <input
